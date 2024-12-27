@@ -1,0 +1,26 @@
+import socket
+
+def discover_hosts(start_ip, end_ip, port=1234):
+    active_hosts = []
+    # Extrair prefixo do IP
+    ip_prefix = ".".join(start_ip.split(".")[:3]) + "."
+    # Extrair intervalo de IPs
+    start = int(start_ip.split(".")[-1])
+    end = int(end_ip.split(".")[-1])
+    
+    for ip in range(start, end + 1):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(0.5)
+                s.connect((f"{ip_prefix}{ip}", port))
+                active_hosts.append(f"{ip_prefix}{ip}")
+        except (socket.timeout, socket.error):
+            continue
+    return active_hosts
+
+# Descobrir hosts ativos
+start_ip = "192.168.15.1"
+end_ip = "192.168.15.244"
+active_hosts = discover_hosts(start_ip, end_ip)
+
+print("Active hosts:", active_hosts)

@@ -1,0 +1,12 @@
+from scapy.all import sniff, TCP, IP
+
+def packet_callback(packet):
+    if packet.haslayer(TCP):
+        opts = packet[TCP].options
+        if opts:
+            print(f"Detected TCP Options: {opts}")
+    elif packet.haslayer(IP):
+        ttl = packet[IP].ttl
+        print(f"Detected TTL: {ttl}")
+
+sniff(prn=packet_callback, filter="ip", count=10)

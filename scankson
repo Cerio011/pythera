@@ -1,0 +1,14 @@
+import nmap
+
+def nmap_scan(target, ports):
+    try:
+        scanner = nmap.PortScanner()
+        scanner.scan(target, ports)
+        for port in scanner[target]['tcp'].keys():
+            state = scanner[target]['tcp'][port]['state']
+            print(f"Port {port} is {state}")
+    except Exception as e:
+        print(f"Error scanning {target}: {e}")
+
+# Example usage:
+nmap_scan('127.0.0.1', '22-443')
